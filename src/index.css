@@ -488,11 +488,12 @@ body {
   font-size: 12px !important;
 }
 
-/* ── Responsive layout ───────────────────────────────────────── */
+/* ── Layout ───────────────────────────────────────── */
 .layout-root {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .layout-sidebar {
@@ -504,6 +505,7 @@ body {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: 100;
 }
 
 .layout-main {
@@ -511,6 +513,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
 }
 
 .layout-topbar {
@@ -531,8 +534,80 @@ body {
   background-color: var(--color-surface-0);
 }
 
+/* ── Hamburger button & Mobile Drawer ────────────────────────── */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-btn:hover {
+  background-color: var(--color-surface-4);
+}
+
+.mobile-overlay {
+  display: none;
+}
+
+/* ── Mobile Responsiveness (768px & below) ───────────────────── */
 @media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
   .layout-sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1100;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .layout-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(2px);
+    z-index: 1050;
+  }
+
+  .layout-topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .layout-content {
+    padding: 12px;
+  }
+
+  /* Responsive grid fallbacks for mobile */
+  div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Stat cards 2-col on mobile */
+  div[style*="grid-template-columns: repeat(auto-fill"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  @media (max-width: 480px) {
+    div[style*="grid-template-columns: repeat(2, 1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
   }
 }

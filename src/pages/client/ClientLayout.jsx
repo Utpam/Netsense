@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import {
   LayoutDashboard, Radio, BarChart3, Laptop,
-  Server, HelpCircle,
+  Server, HelpCircle, Menu, X
 } from 'lucide-react'
 import useSignalStore from '../../store/useSignalStore.js'
 import useTrafficStore from '../../store/useTrafficStore.js'
@@ -28,6 +29,8 @@ export default function ClientLayout() {
   const traffic  = useTrafficStore(s => s.live)
   const tickTraf = useTrafficStore(s => s.tick)
 
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   usePolling(fetchSig, POLL_SIGNAL)
   usePolling(tickTraf, POLL_TRAFFIC)
 
@@ -35,9 +38,14 @@ export default function ClientLayout() {
 
   return (
     <div className="layout-root">
-      {/* Sidebar */}
-      <aside className="layout-sidebar">
-        <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid var(--color-border)' }}>
+      {/* ── Mobile Overlay Backdrop ──────────────────────── */}
+      {mobileOpen && (
+        <div className="mobile-overlay" onClick={() => setMobileOpen(false)} />
+      )}
+
+      {/* ── Sidebar ─────────────────────────────────────── */}
+      <aside className={`layout-sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
+        <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Radio size={16} color="#000" />
@@ -47,6 +55,10 @@ export default function ClientLayout() {
               <div style={{ fontSize: 10, color: 'var(--color-text-muted)', letterSpacing: '0.05em' }}>GATEWAY</div>
             </div>
           </div>
+
+          <button className="mobile-menu-btn" onClick={() => setMobileOpen(false)}>
+            <X size={18} />
+          </button>
         </div>
 
         <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
@@ -58,6 +70,7 @@ export default function ClientLayout() {
                 key={item.to}
                 to={item.to}
                 end={item.end}
+                onClick={() => setMobileOpen(false)}
                 className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
               >
                 <item.icon size={15} />
@@ -88,17 +101,25 @@ export default function ClientLayout() {
         </div>
       </aside>
 
-      {/* Main */}
+      {/* ── Main ────────────────────────────────────────── */}
       <main className="layout-main">
         <div className="layout-topbar">
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu size={20} />
+          </button>
+
           <span className="live-dot" />
-          <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>
+          <span style={{ fontSize: 12, color: 'var(--color-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {signal.operator} · {signal.technology} · Band {signal.band}
           </span>
           <div style={{ flex: 1 }} />
           <a
             href="/login"
-            style={{ fontSize: 12, color: 'var(--color-primary)', textDecoration: 'none' }}
+            style={{ fontSize: 12, color: 'var(--color-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}
           >
             Admin →
           </a>
