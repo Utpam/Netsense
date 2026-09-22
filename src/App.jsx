@@ -1,76 +1,56 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import './App.css'
+import AppLayout from './components/layout/AppLayout.jsx'
 
-// Auth
-import LoginPage from './pages/LoginPage.jsx'
-import useAuthStore from './store/useAuthStore.js'
+// Level 1: Normal User Navigation
+import DashboardPage from './pages/DashboardPage.jsx'
+import DevicesPage from './pages/DevicesPage.jsx'
+import FilesPage from './pages/FilesPage.jsx'
+import LocalServicesPage from './pages/LocalServicesPage.jsx'
+import HelpPage from './pages/HelpPage.jsx'
 
-// Layouts
-import AdminLayout  from './pages/admin/AdminLayout.jsx'
-import ClientLayout from './pages/client/ClientLayout.jsx'
-
-// Admin pages
-import AdminDashboard from './pages/admin/AdminDashboard.jsx'
-import AdminNetwork   from './pages/admin/AdminNetwork.jsx'
-import AdminGateway   from './pages/admin/AdminGateway.jsx'
-import AdminDevices   from './pages/admin/AdminDevices.jsx'
-import AdminTraffic   from './pages/admin/AdminTraffic.jsx'
-import AdminQoS       from './pages/admin/AdminQoS.jsx'
-import AdminDns       from './pages/admin/AdminDns.jsx'
-import AdminVpn       from './pages/admin/AdminVpn.jsx'
-import AdminFiles     from './pages/admin/AdminFiles.jsx'
-import AdminSettings  from './pages/admin/AdminSettings.jsx'
-
-// Client pages
-import ClientDashboard   from './pages/client/ClientDashboard.jsx'
-import ClientSignal      from './pages/client/ClientSignal.jsx'
-import ClientUsage       from './pages/client/ClientUsage.jsx'
-import ClientDevices     from './pages/client/ClientDevices.jsx'
-import ClientServices    from './pages/client/ClientServices.jsx'
-import ClientTroubleshoot from './pages/client/ClientTroubleshoot.jsx'
-
-// Protected route wrapper
-function RequireAuth({ children }) {
-  const isAuthenticated = useAuthStore(s => s.isAuthenticated)
-  return isAuthenticated ? children : <Navigate to="/login" replace />
-}
+// Level 2 & 3: Advanced Settings & Technical Configuration
+import AdvancedSettingsPage from './pages/advanced/AdvancedSettingsPage.jsx'
+import NetworkSection from './pages/advanced/NetworkSection.jsx'
+import CellularSection from './pages/advanced/CellularSection.jsx'
+import QosSection from './pages/advanced/QosSection.jsx'
+import DnsSection from './pages/advanced/DnsSection.jsx'
+import VpnSection from './pages/advanced/VpnSection.jsx'
+import TrafficSection from './pages/advanced/TrafficSection.jsx'
+import SecuritySection from './pages/advanced/SecuritySection.jsx'
+import MonitoringSection from './pages/advanced/MonitoringSection.jsx'
+import PowerSection from './pages/advanced/PowerSection.jsx'
+import SystemSection from './pages/advanced/SystemSection.jsx'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Root → Client */}
-        <Route path="/" element={<Navigate to="/client" replace />} />
+        <Route path="/" element={<AppLayout />}>
+          {/* Level 1: Normal User Pages */}
+          <Route index element={<DashboardPage />} />
+          <Route path="devices" element={<DevicesPage />} />
+          <Route path="files" element={<FilesPage />} />
+          <Route path="services" element={<LocalServicesPage />} />
+          <Route path="help" element={<HelpPage />} />
 
-        {/* Auth */}
-        <Route path="/login" element={<LoginPage />} />
+          {/* Level 2 & 3: Advanced Settings */}
+          <Route path="advanced" element={<AdvancedSettingsPage />}>
+            <Route index element={<Navigate to="network" replace />} />
+            <Route path="network" element={<NetworkSection />} />
+            <Route path="cellular" element={<CellularSection />} />
+            <Route path="qos" element={<QosSection />} />
+            <Route path="dns" element={<DnsSection />} />
+            <Route path="vpn" element={<VpnSection />} />
+            <Route path="traffic" element={<TrafficSection />} />
+            <Route path="security" element={<SecuritySection />} />
+            <Route path="monitoring" element={<MonitoringSection />} />
+            <Route path="power" element={<PowerSection />} />
+            <Route path="system" element={<SystemSection />} />
+          </Route>
 
-        {/* Client Portal (no auth required) */}
-        <Route path="/client" element={<ClientLayout />}>
-          <Route index element={<ClientDashboard />} />
-          <Route path="signal"   element={<ClientSignal />} />
-          <Route path="usage"    element={<ClientUsage />} />
-          <Route path="devices"  element={<ClientDevices />} />
-          <Route path="services" element={<ClientServices />} />
-          <Route path="help"     element={<ClientTroubleshoot />} />
+          {/* Fallback to Dashboard */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
-
-        {/* Admin Portal (JWT required) */}
-        <Route path="/admin" element={<RequireAuth><AdminLayout /></RequireAuth>}>
-          <Route index          element={<AdminDashboard />} />
-          <Route path="network" element={<AdminNetwork />} />
-          <Route path="gateway" element={<AdminGateway />} />
-          <Route path="devices" element={<AdminDevices />} />
-          <Route path="traffic" element={<AdminTraffic />} />
-          <Route path="qos"     element={<AdminQoS />} />
-          <Route path="dns"     element={<AdminDns />} />
-          <Route path="vpn"     element={<AdminVpn />} />
-          <Route path="files"   element={<AdminFiles />} />
-          <Route path="settings"element={<AdminSettings />} />
-        </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/client" replace />} />
       </Routes>
     </BrowserRouter>
   )

@@ -6,10 +6,28 @@ const useDeviceStore = create((set, get) => ({
   loading: false,
 
   fetch: async () => {
-    // Simulate devices going online/offline slightly
     set({ loading: false })
   },
 
+  // Toggle blocked state (pause/resume internet)
+  toggleBlock: (mac) => {
+    set({
+      devices: get().devices.map(d =>
+        d.mac === mac ? { ...d, blocked: !d.blocked } : d
+      ),
+    })
+  },
+
+  // Patch any device fields by MAC
+  updateDevice: (mac, patch) => {
+    set({
+      devices: get().devices.map(d =>
+        d.mac === mac ? { ...d, ...patch } : d
+      ),
+    })
+  },
+
+  // Legacy specific methods
   setName: (mac, name) => {
     set({
       devices: get().devices.map(d => d.mac === mac ? { ...d, name } : d),

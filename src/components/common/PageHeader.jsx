@@ -1,15 +1,13 @@
 export default function PageHeader({ title, subtitle, actions }) {
   return (
     <div style={{
-      display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-      gap: 16, marginBottom: 20, flexWrap: 'wrap',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      gap: 16, marginBottom: 16, flexWrap: 'wrap',
     }}>
       <div>
-        <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: 'var(--color-text)', lineHeight: 1.2 }}>
-          {title}
-        </h1>
+        <h1 className="page-title">{title}</h1>
         {subtitle && (
-          <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--color-text-muted)' }}>{subtitle}</p>
+          <p className="page-subtitle">{subtitle}</p>
         )}
       </div>
       {actions && (

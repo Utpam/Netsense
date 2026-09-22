@@ -1,22 +1,18 @@
 import { useState, useMemo } from 'react'
 import { ChevronUp, ChevronDown, Search } from 'lucide-react'
 
-// DataTable — sortable, filterable generic table component
-// columns: [{ key, label, render?, align?, mono? }]
-// rows: array of objects
-
+// DataTable — Sortable, filterable router-admin table
 export default function DataTable({
   columns,
-  rows,
+  rows = [],
   searchable = false,
   searchKeys,
-  emptyText = 'No data',
+  emptyText = 'No data available',
   rowKey = 'id',
-  compact = false,
 }) {
-  const [sortKey,   setSortKey]   = useState(null)
-  const [sortAsc,   setSortAsc]   = useState(true)
-  const [query,     setQuery]     = useState('')
+  const [sortKey, setSortKey] = useState(null)
+  const [sortAsc, setSortAsc] = useState(true)
+  const [query, setQuery]     = useState('')
 
   const filtered = useMemo(() => {
     if (!query || !searchable) return rows
@@ -45,15 +41,15 @@ export default function DataTable({
   }
 
   return (
-    <div>
+    <div className="table-container">
       {searchable && (
-        <div style={{ padding: '10px 12px', borderBottom: '1px solid var(--color-border)' }}>
-          <div style={{ position: 'relative', maxWidth: 280 }}>
+        <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--color-border)', backgroundColor: '#FAFAFA' }}>
+          <div style={{ position: 'relative', maxWidth: 260 }}>
             <Search size={13} style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
             <input
-              className="sl-input"
-              style={{ paddingLeft: 28 }}
-              placeholder="Filter…"
+              className="form-input"
+              style={{ width: '100%', paddingLeft: 28, fontSize: 11 }}
+              placeholder="Search / filter entries…"
               value={query}
               onChange={e => setQuery(e.target.value)}
             />
@@ -61,7 +57,7 @@ export default function DataTable({
         </div>
       )}
       <div style={{ overflowX: 'auto' }}>
-        <table className="sl-table">
+        <table className="router-table">
           <thead>
             <tr>
               {columns.map(col => (
@@ -74,8 +70,8 @@ export default function DataTable({
                     {col.label}
                     {sortKey === col.key && (
                       sortAsc
-                        ? <ChevronUp size={11} />
-                        : <ChevronDown size={11} />
+                        ? <ChevronUp size={12} />
+                        : <ChevronDown size={12} />
                     )}
                   </span>
                 </th>
@@ -85,7 +81,7 @@ export default function DataTable({
           <tbody>
             {sorted.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} style={{ textAlign: 'center', color: 'var(--color-text-muted)', padding: '24px 12px' }}>
+                <td colSpan={columns.length} style={{ textAlign: 'center', color: 'var(--color-text-secondary)', padding: '24px 12px' }}>
                   {emptyText}
                 </td>
               </tr>

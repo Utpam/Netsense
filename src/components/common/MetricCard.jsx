@@ -1,36 +1,32 @@
-// MetricCard — shows a large value + label + optional trend indicator
-export default function MetricCard({ label, value, unit, icon: Icon, trend, trendLabel, accentColor, children }) {
-  const trendUp    = trend > 0
-  const trendDown  = trend < 0
-  const trendColor = trendUp ? 'var(--color-success)' : trendDown ? 'var(--color-danger)' : 'var(--color-text-muted)'
+// MetricCard — Compact information block for NetSense router panel
 
+export default function MetricCard({ label, value, unit, icon: Icon, subtext, accentColor, children, className = '' }) {
   return (
-    <div className="card" style={{ padding: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+    <div className={`info-block ${className}`}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="metric-label">{label}</div>
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span className="metric-value mono" style={accentColor ? { color: accentColor } : {}}>
+          <div className="info-block-label">{label}</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+            <span className="info-block-value mono" style={accentColor ? { color: accentColor } : {}}>
               {value ?? '—'}
             </span>
-            {unit && <span className="metric-unit">{unit}</span>}
+            {unit && <span style={{ fontSize: 12, color: 'var(--color-text-secondary)', fontWeight: 500 }}>{unit}</span>}
           </div>
-          {trend !== undefined && (
-            <div style={{ marginTop: 6, fontSize: 11, color: trendColor, display: 'flex', alignItems: 'center', gap: 3 }}>
-              {trendUp ? '▲' : trendDown ? '▼' : '─'}
-              {trendLabel && <span style={{ color: 'var(--color-text-muted)' }}>{trendLabel}</span>}
-            </div>
+          {subtext && (
+            <div className="info-block-sub">{subtext}</div>
           )}
           {children}
         </div>
         {Icon && (
           <div style={{
-            width: 36, height: 36, borderRadius: 8,
-            background: 'var(--color-surface-4)',
+            width: 28, height: 28, borderRadius: 3,
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-border-subtle)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
+            color: 'var(--color-primary)'
           }}>
-            <Icon size={18} color="var(--color-text-muted)" />
+            <Icon size={15} />
           </div>
         )}
       </div>

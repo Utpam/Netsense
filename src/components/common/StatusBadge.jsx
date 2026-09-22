@@ -1,11 +1,12 @@
-// StatusBadge — renders a colored badge based on status string or explicit variant
-// Usage: <StatusBadge status="online" /> or <StatusBadge variant="success" label="Active" />
+// StatusBadge — renders sharp, compact status badge matching NetSense theme
 
 const STATUS_MAP = {
   online:       { variant: 'success', label: 'Online'      },
-  offline:      { variant: 'danger',  label: 'Offline'     },
+  offline:      { variant: 'neutral', label: 'Offline'     },
   connected:    { variant: 'success', label: 'Connected'   },
   disconnected: { variant: 'danger',  label: 'Disconnected' },
+  running:      { variant: 'success', label: 'Running'     },
+  stopped:      { variant: 'neutral', label: 'Stopped'     },
   up:           { variant: 'success', label: 'UP'          },
   down:         { variant: 'danger',  label: 'DOWN'        },
   active:       { variant: 'success', label: 'Active'      },
@@ -17,6 +18,8 @@ const STATUS_MAP = {
   good:         { variant: 'success', label: 'Good'        },
   fair:         { variant: 'warning', label: 'Fair'        },
   poor:         { variant: 'danger',  label: 'Poor'        },
+  warning:      { variant: 'warning', label: 'Warning'     },
+  error:        { variant: 'danger',  label: 'Error'       },
   hit:          { variant: 'success', label: 'HIT'         },
   miss:         { variant: 'neutral', label: 'MISS'        },
   block:        { variant: 'danger',  label: 'BLOCK'       },
@@ -25,14 +28,14 @@ const STATUS_MAP = {
   reject:       { variant: 'warning', label: 'REJECT'      },
 }
 
-export default function StatusBadge({ status, variant, label, dot = false }) {
+export default function StatusBadge({ status, variant, label, dot = true, className = '' }) {
   const resolved = status
-    ? (STATUS_MAP[status.toLowerCase()] || { variant: 'neutral', label: status })
+    ? (STATUS_MAP[status.toString().toLowerCase()] || { variant: 'neutral', label: status })
     : { variant: variant || 'neutral', label: label || '—' }
 
   return (
-    <span className={`badge badge-${resolved.variant}`}>
-      {dot && <span className="live-dot" style={{ width: 5, height: 5 }} />}
+    <span className={`badge badge-${resolved.variant} ${className}`}>
+      {dot && <span className="badge-dot" />}
       {label || resolved.label}
     </span>
   )
