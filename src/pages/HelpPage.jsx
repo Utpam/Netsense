@@ -61,62 +61,65 @@ export default function HelpPage() {
         </div>
         <div className="card-body">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '8px 12px', borderRadius: 4,
-              backgroundColor: signal.connected ? 'var(--color-success-bg)' : 'var(--color-danger-bg)',
-              border: `1px solid ${signal.connected ? 'var(--color-success-border)' : 'var(--color-danger-border)'}`
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Radio size={16} color={signal.connected ? 'var(--color-success)' : 'var(--color-danger)'} />
-                <div>
+            <div
+              className="checklist-item"
+              style={{
+                backgroundColor: signal.connected ? 'var(--color-success-bg)' : 'var(--color-danger-bg)',
+                border: `1px solid ${signal.connected ? 'var(--color-success-border)' : 'var(--color-danger-border)'}`
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                <Radio size={16} color={signal.connected ? 'var(--color-success)' : 'var(--color-danger)'} style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 12 }}>Cellular Modem & SIM Card</div>
-                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', wordBreak: 'break-word' }}>
                     {signal.connected ? `Modem attached to ${signal.operator} (${signal.technology})` : 'Modem disconnected or SIM card error'}
                   </div>
                 </div>
               </div>
-              <span className={`badge ${signal.connected ? 'badge-success' : 'badge-danger'}`}>
+              <span className={`badge ${signal.connected ? 'badge-success' : 'badge-danger'}`} style={{ flexShrink: 0 }}>
                 {signal.connected ? 'OK' : 'FAIL'}
               </span>
             </div>
 
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '8px 12px', borderRadius: 4,
-              backgroundColor: dnsStatus.running ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
-              border: `1px solid ${dnsStatus.running ? 'var(--color-success-border)' : 'var(--color-warning-border)'}`
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <CheckCircle2 size={16} color={dnsStatus.running ? 'var(--color-success)' : 'var(--color-warning)'} />
-                <div>
+            <div
+              className="checklist-item"
+              style={{
+                backgroundColor: dnsStatus.running ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
+                border: `1px solid ${dnsStatus.running ? 'var(--color-success-border)' : 'var(--color-warning-border)'}`
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                <CheckCircle2 size={16} color={dnsStatus.running ? 'var(--color-success)' : 'var(--color-warning)'} style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 12 }}>DNS Name Resolution</div>
-                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', wordBreak: 'break-word' }}>
                     {dnsStatus.running ? 'Local DNS cache active and resolving upstream domains' : 'DNS service restarted or initializing'}
                   </div>
                 </div>
               </div>
-              <span className={`badge ${dnsStatus.running ? 'badge-success' : 'badge-warning'}`}>
+              <span className={`badge ${dnsStatus.running ? 'badge-success' : 'badge-warning'}`} style={{ flexShrink: 0 }}>
                 {dnsStatus.running ? 'OK' : 'CHECK'}
               </span>
             </div>
 
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '8px 12px', borderRadius: 4,
-              backgroundColor: 'var(--color-success-bg)',
-              border: '1px solid var(--color-success-border)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Wifi size={16} color="var(--color-success)" />
-                <div>
+            <div
+              className="checklist-item"
+              style={{
+                backgroundColor: 'var(--color-success-bg)',
+                border: '1px solid var(--color-success-border)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                <Wifi size={16} color="var(--color-success)" style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 12 }}>Local Gateway & Routing Engine</div>
-                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', wordBreak: 'break-word' }}>
                     IPv4 packet forwarding enabled on 192.168.1.1
                   </div>
                 </div>
               </div>
-              <span className="badge badge-success">OK</span>
+              <span className="badge badge-success" style={{ flexShrink: 0 }}>OK</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Laptop, Wifi, ArrowUpDown, Pause, Play, Edit3, ArrowRight } from 'lucide-react'
+import { Laptop, Pause, Play, ArrowRight } from 'lucide-react'
 import PageHeader from '../components/common/PageHeader.jsx'
 import DataTable from '../components/common/DataTable.jsx'
 import StatusBadge from '../components/common/StatusBadge.jsx'
@@ -18,18 +18,18 @@ export default function DevicesPage() {
   const columns = [
     {
       key: 'name',
-      label: 'Device Name',
+      label: 'Device',
       sortable: true,
       render: (val, row) => (
         <button
           className="btn btn-ghost"
-          style={{ padding: 0, textAlign: 'left', fontWeight: 600, color: 'var(--color-primary)' }}
+          style={{ padding: 0, textAlign: 'left', color: 'var(--color-primary)', fontWeight: 600, minHeight: 'auto' }}
           onClick={() => setSelectedDevice(row)}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Laptop size={14} color="var(--color-text-secondary)" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+            <Laptop size={14} color="var(--color-text-secondary)" style={{ flexShrink: 0 }} />
             <div>
-              <div>{val}</div>
+              <div className="text-truncate" style={{ maxWidth: 140 }}>{val}</div>
               <div style={{ fontSize: 10, color: 'var(--color-text-muted)', fontWeight: 400 }}>{row.vendor || 'Unknown'}</div>
             </div>
           </div>
@@ -39,10 +39,10 @@ export default function DevicesPage() {
     {
       key: 'connection',
       label: 'Connection',
-      sortable: true,
+      sortable: false,
       render: (_, row) => (
-        <span style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>
-          {row.vendor === 'Synology' ? 'Ethernet (eth0)' : 'Wi-Fi 5GHz'}
+        <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
+          {row.vendor === 'Synology' ? 'Ethernet' : 'Wi-Fi'}
         </span>
       )
     },
@@ -50,49 +50,45 @@ export default function DevicesPage() {
       key: 'online',
       label: 'Status',
       sortable: true,
-      render: (online, row) => (
-        row.blocked ? (
-          <StatusBadge status="blocked" label="Paused" />
-        ) : (
-          <StatusBadge status={online ? 'connected' : 'offline'} />
-        )
-      )
+      render: (online, row) =>
+        row.blocked
+          ? <StatusBadge status="blocked" label="Paused" />
+          : <StatusBadge status={online ? 'connected' : 'offline'} />
     },
     {
       key: 'ip',
-      label: 'IP Address',
+      label: 'IP',
       mono: true,
       sortable: true
     },
     {
       key: 'usage',
-      label: 'Data Usage',
-      sortable: true,
+      label: 'Usage',
+      sortable: false,
       render: (_, row) => (
-        <span className="mono" style={{ fontSize: 12 }}>
+        <span className="mono" style={{ fontSize: 11 }}>
           {formatBytes((row.rx || 0) + (row.tx || 0))}
         </span>
       )
     },
     {
       key: '_actions',
-      label: 'Actions',
+      label: '',
       sortable: false,
       render: (_, row) => (
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 5 }}>
           <button
             className="btn btn-secondary btn-sm"
             onClick={() => setSelectedDevice(row)}
-            title="View Details"
           >
             Details
           </button>
           <button
             className={`btn ${row.blocked ? 'btn-primary' : 'btn-ghost'} btn-sm`}
             onClick={() => toggleBlock(row.mac)}
-            title={row.blocked ? 'Resume Internet' : 'Pause Internet'}
+            title={row.blocked ? 'Resume internet access' : 'Pause internet access'}
           >
-            {row.blocked ? <Play size={12} /> : <Pause size={12} />}
+            {row.blocked ? <Play size={11} /> : <Pause size={11} />}
             {row.blocked ? 'Resume' : 'Pause'}
           </button>
         </div>
@@ -104,15 +100,14 @@ export default function DevicesPage() {
     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
       <PageHeader
         title="Connected Devices"
-        subtitle="Manage devices on the local wireless and Ethernet network"
+        subtitle="Manage devices on the local network"
         actions={
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>
-              Total: <strong>{devices.length}</strong> (Online: <strong>{devices.filter(d => d.online).length}</strong>)
+          <div className="btn-row">
+            <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
+              {devices.length} total · {devices.filter(d => d.online).length} online
             </span>
             <Link to="/advanced/qos" className="btn btn-ghost btn-sm" style={{ color: 'var(--color-primary)' }}>
-              Advanced QoS Bandwidth Limits
-              <ArrowRight size={12} />
+              QoS Limits <ArrowRight size={11} />
             </Link>
           </div>
         }
@@ -122,7 +117,7 @@ export default function DevicesPage() {
         <DataTable
           columns={columns}
           rows={devices}
-          searchable={true}
+          searchable
           searchKeys={['name', 'ip', 'mac', 'vendor', 'hostname']}
           emptyText="No connected devices found."
           rowKey="mac"

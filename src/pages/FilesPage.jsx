@@ -179,7 +179,7 @@ export default function FilesPage() {
       </div>
 
       {/* Folder Navigation and File Table */}
-      <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 16 }}>
+      <div className="sidebar-split">
         {/* Folder list */}
         <div className="card" style={{ height: 'fit-content' }}>
           <div className="card-header">
@@ -191,18 +191,17 @@ export default function FilesPage() {
                 key={f.id}
                 onClick={() => setFolder(f.id)}
                 className={`sidebar-nav-item ${currentFolder === f.id ? 'active' : ''}`}
-                style={{ width: '100%', border: 'none', textAlign: 'left', cursor: 'pointer' }}
               >
-                <Folder size={14} />
+                <Folder size={14} style={{ flexShrink: 0 }} />
                 <span style={{ flex: 1 }}>{f.label}</span>
-                <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>{f.count}</span>
+                <span style={{ fontSize: 10, color: 'var(--color-text-muted)', flexShrink: 0 }}>{f.count}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* Files in folder & Recent files */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* Recent files list */}
           <div className="card">
             <div className="card-header">
@@ -218,24 +217,27 @@ export default function FilesPage() {
                     key={rf.name + idx}
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '8px 16px',
+                      padding: '8px 14px',
                       borderBottom: idx === recentFiles.length - 1 ? 'none' : '1px solid var(--color-border-subtle)',
                       backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
-                      fontSize: 12
+                      fontSize: 12,
+                      gap: 8,
+                      flexWrap: 'wrap'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <File size={14} color="var(--color-text-secondary)" />
-                      <div>
-                        <div style={{ fontWeight: 500 }}>{rf.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                      <File size={14} color="var(--color-text-secondary)" style={{ flexShrink: 0 }} />
+                      <div style={{ minWidth: 0 }}>
+                        <div className="text-truncate" style={{ fontWeight: 500, maxWidth: '220px' }}>{rf.name}</div>
                         <div style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>
-                          Folder: /{rf.folder || currentFolder} · {formatBytes(rf.size || 0)}
+                          /{rf.folder || currentFolder} · {formatBytes(rf.size || 0)}
                         </div>
                       </div>
                     </div>
                     <button
                       className="btn btn-ghost btn-sm"
                       onClick={() => handleDownload(rf.name)}
+                      style={{ flexShrink: 0 }}
                     >
                       <Download size={12} />
                       Download

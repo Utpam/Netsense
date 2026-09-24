@@ -85,16 +85,14 @@ export default function SystemSection() {
           ].map(([k, v], idx) => (
             <div
               key={k}
+              className="kv-row"
               style={{
-                display: 'flex', justifyContent: 'space-between',
-                padding: '8px 12px',
-                fontSize: 12,
                 backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
                 borderBottom: idx === 5 ? 'none' : '1px solid var(--color-border-subtle)'
               }}
             >
-              <span style={{ color: 'var(--color-text-secondary)' }}>{k}</span>
-              <span className="mono" style={{ fontWeight: 500 }}>{v}</span>
+              <span style={{ color: 'var(--color-text-secondary)', flexShrink: 0 }}>{k}</span>
+              <span className="mono" style={{ fontWeight: 500, wordBreak: 'break-all', textAlign: 'right' }}>{v}</span>
             </div>
           ))}
         </div>
@@ -105,7 +103,7 @@ export default function SystemSection() {
         title="Host Identity & Admin Credentials"
         subtitle="Network hostname and web UI administrator login"
       >
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2col">
           {/* Hostname form */}
           <form onSubmit={handleSaveHostname}>
             <div className="form-group">
@@ -135,7 +133,7 @@ export default function SystemSection() {
                 required
               />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div className="form-grid-2">
               <div className="form-group">
                 <label className="form-label">New Password</label>
                 <input
@@ -177,7 +175,7 @@ export default function SystemSection() {
         title="Backup & Restore Settings"
         subtitle="Export router configuration or restore from a JSON backup file"
       >
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div className="btn-row">
           <button className="btn btn-secondary btn-sm" onClick={handleBackupExport}>
             <Download size={13} />
             Export Configuration Backup (.json)

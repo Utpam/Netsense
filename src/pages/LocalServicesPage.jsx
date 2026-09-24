@@ -104,7 +104,7 @@ export default function LocalServicesPage() {
         subtitle="Status of embedded daemons and network services running on NetSense"
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) 1.2fr', gap: 16 }}>
+      <div className="services-split">
         {/* Service List */}
         <div className="card">
           <div className="card-header">
@@ -181,18 +181,17 @@ export default function LocalServicesPage() {
               {Object.entries(active.details).filter(([k]) => k !== 'summary').map(([key, val], idx) => (
                 <div
                   key={key}
+                  className="kv-row"
                   style={{
-                    display: 'flex', justifyContent: 'space-between',
-                    padding: '8px 12px',
                     fontSize: 12,
                     backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
                     borderBottom: '1px solid var(--color-border-subtle)'
                   }}
                 >
-                  <span style={{ color: 'var(--color-text-secondary)', textTransform: 'capitalize' }}>
+                  <span style={{ color: 'var(--color-text-secondary)', textTransform: 'capitalize', flexShrink: 0 }}>
                     {key.replace(/([A-Z])/g, ' $1')}
                   </span>
-                  <span className="mono" style={{ fontWeight: 500 }}>{val}</span>
+                  <span className="mono text-truncate" style={{ fontWeight: 500, maxWidth: '60%', textAlign: 'right' }}>{val}</span>
                 </div>
               ))}
               <div
@@ -208,7 +207,7 @@ export default function LocalServicesPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8, flexWrap: 'wrap', gap: 8 }}>
               <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
                 Need advanced daemon parameters?
               </span>

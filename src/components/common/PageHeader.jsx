@@ -1,17 +1,12 @@
 export default function PageHeader({ title, subtitle, actions }) {
   return (
-    <div style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      gap: 16, marginBottom: 16, flexWrap: 'wrap',
-    }}>
-      <div>
+    <div className="page-header-row">
+      <div style={{ minWidth: 0 }}>
         <h1 className="page-title">{title}</h1>
-        {subtitle && (
-          <p className="page-subtitle">{subtitle}</p>
-        )}
+        {subtitle && <p className="page-subtitle">{subtitle}</p>}
       </div>
       {actions && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <div className="btn-row" style={{ flexShrink: 0 }}>
           {actions}
         </div>
       )}

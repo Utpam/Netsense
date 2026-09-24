@@ -106,7 +106,7 @@ export default function QosSection() {
         subtitle="Hierarchical Token Bucket (HTB) queue discipline"
         badge={<StatusBadge status={status.enabled ? 'active' : 'disabled'} />}
         actions={
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="btn-row">
             <button
               className="btn btn-secondary btn-sm"
               onClick={() => setShowAddModal(true)}
@@ -208,7 +208,7 @@ export default function QosSection() {
                   </select>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="form-grid-2">
                   <div className="form-group">
                     <label className="form-label">Max Download (Kbps)</label>
                     <input

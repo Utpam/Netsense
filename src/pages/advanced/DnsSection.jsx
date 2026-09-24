@@ -181,7 +181,7 @@ export default function DnsSection() {
           <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: 'var(--color-text)' }}>
             Live Domain Resolution Test
           </div>
-          <form onSubmit={handleTestLookup} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <form onSubmit={handleTestLookup} style={{ display: 'flex', gap: 8, alignItems: 'flex-end', flexWrap: 'wrap' }}>
             <input
               className="form-input mono"
               style={{ maxWidth: 280, fontSize: 12 }}
@@ -196,9 +196,9 @@ export default function DnsSection() {
           </form>
 
           {testQueryResult && (
-            <div style={{ marginTop: 10, fontSize: 12, display: 'flex', gap: 16, color: 'var(--color-text-secondary)' }}>
+            <div style={{ marginTop: 10, fontSize: 12, display: 'flex', flexWrap: 'wrap', gap: '6px 16px', color: 'var(--color-text-secondary)' }}>
               <span>Domain: <strong className="mono" style={{ color: 'var(--color-text)' }}>{testQueryResult.domain}</strong></span>
-              <span>Resolved IP: <strong className="mono" style={{ color: 'var(--color-primary)' }}>{testQueryResult.resolvedIp}</strong></span>
+              <span>IP: <strong className="mono" style={{ color: 'var(--color-primary)' }}>{testQueryResult.resolvedIp}</strong></span>
               <span>TTL: <strong className="mono">{testQueryResult.ttl}s</strong></span>
               <span>Status: <strong className="mono" style={{ color: 'var(--color-success)' }}>{testQueryResult.status}</strong></span>
             </div>
@@ -206,12 +206,12 @@ export default function DnsSection() {
         </div>
 
         {/* Sub-tabs for detailed configuration */}
-        <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--color-border)', marginBottom: 12 }}>
+        <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--color-border)', marginBottom: 12, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           {[
-            { id: 'records', label: `Custom Records (${records.length})` },
+            { id: 'records',   label: `Records (${records.length})` },
             { id: 'blocklist', label: `Blocklist (${blocklist.length})` },
-            { id: 'upstream', label: 'Upstream Servers' },
-            { id: 'logs', label: 'Query Log' },
+            { id: 'upstream',  label: 'Upstream' },
+            { id: 'logs',      label: 'Query Log' },
           ].map(t => (
             <button
               key={t.id}
@@ -221,7 +221,9 @@ export default function DnsSection() {
                 borderBottom: activeSubtab === t.id ? '2px solid var(--color-primary)' : '2px solid transparent',
                 borderRadius: '4px 4px 0 0',
                 color: activeSubtab === t.id ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-                fontWeight: activeSubtab === t.id ? 600 : 400
+                fontWeight: activeSubtab === t.id ? 600 : 400,
+                flexShrink: 0,
+                whiteSpace: 'nowrap'
               }}
             >
               {t.label}
@@ -232,8 +234,8 @@ export default function DnsSection() {
         {/* Subtab 1: Custom Records */}
         {activeSubtab === 'records' && (
           <div>
-            <form onSubmit={handleAddRec} style={{ display: 'flex', gap: 8, alignItems: 'flex-end', marginBottom: 12 }}>
-              <div className="form-group" style={{ flex: 1, margin: 0 }}>
+            <form onSubmit={handleAddRec} className="inline-form-row" style={{ marginBottom: 12 }}>
+              <div className="form-group" style={{ minWidth: 140 }}>
                 <label className="form-label">Hostname</label>
                 <input
                   className="form-input mono"
@@ -243,7 +245,7 @@ export default function DnsSection() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ flex: 1, margin: 0 }}>
+              <div className="form-group" style={{ minWidth: 130 }}>
                 <label className="form-label">Target IP</label>
                 <input
                   className="form-input mono"
@@ -253,7 +255,7 @@ export default function DnsSection() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ width: 100, margin: 0 }}>
+              <div className="form-group" style={{ minWidth: 80, flex: 0 }}>
                 <label className="form-label">Type</label>
                 <select
                   className="form-select mono"
@@ -263,9 +265,9 @@ export default function DnsSection() {
                   {DNS_RECORD_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
-              <button type="submit" className="btn btn-primary btn-sm" style={{ height: 32 }}>
+              <button type="submit" className="btn btn-primary btn-sm" style={{ alignSelf: 'flex-end', marginBottom: 12 }}>
                 <Plus size={12} />
-                Add Record
+                Add
               </button>
             </form>
             <DataTable columns={recordCols} rows={records} rowKey="id" />
@@ -275,8 +277,8 @@ export default function DnsSection() {
         {/* Subtab 2: Blocklist */}
         {activeSubtab === 'blocklist' && (
           <div>
-            <form onSubmit={handleAddBlock} style={{ display: 'flex', gap: 8, alignItems: 'flex-end', marginBottom: 12 }}>
-              <div className="form-group" style={{ flex: 1, margin: 0 }}>
+            <form onSubmit={handleAddBlock} className="inline-form-row" style={{ marginBottom: 12 }}>
+              <div className="form-group" style={{ minWidth: 140 }}>
                 <label className="form-label">Domain to Block</label>
                 <input
                   className="form-input mono"
@@ -286,7 +288,7 @@ export default function DnsSection() {
                   required
                 />
               </div>
-              <div className="form-group" style={{ flex: 1, margin: 0 }}>
+              <div className="form-group" style={{ minWidth: 130 }}>
                 <label className="form-label">Reason / Category</label>
                 <input
                   className="form-input"
@@ -295,9 +297,9 @@ export default function DnsSection() {
                   onChange={e => setNewBlock({ ...newBlock, reason: e.target.value })}
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-sm" style={{ height: 32 }}>
+              <button type="submit" className="btn btn-primary btn-sm" style={{ alignSelf: 'flex-end', marginBottom: 12 }}>
                 <Plus size={12} />
-                Block Domain
+                Block
               </button>
             </form>
             <DataTable columns={blockCols} rows={blocklist} rowKey="id" />

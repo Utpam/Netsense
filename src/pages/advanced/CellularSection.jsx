@@ -106,16 +106,14 @@ export default function CellularSection() {
           ].map(([k, v], idx) => (
             <div
               key={k}
+              className="kv-row"
               style={{
-                display: 'flex', justifyContent: 'space-between',
-                padding: '8px 12px',
-                fontSize: 12,
                 backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
                 borderBottom: idx === 6 ? 'none' : '1px solid var(--color-border-subtle)'
               }}
             >
-              <span style={{ color: 'var(--color-text-secondary)' }}>{k}</span>
-              <span className="mono" style={{ fontWeight: 500 }}>{v}</span>
+              <span style={{ color: 'var(--color-text-secondary)', flexShrink: 0 }}>{k}</span>
+              <span className="mono" style={{ fontWeight: 500, wordBreak: 'break-all', textAlign: 'right' }}>{v}</span>
             </div>
           ))}
         </div>

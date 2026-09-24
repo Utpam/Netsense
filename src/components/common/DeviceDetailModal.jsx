@@ -81,43 +81,36 @@ export default function DeviceDetailModal({ device, onClose, onUpdateDevice, onT
                 ['MAC Address', device.mac, true],
                 ['Hostname', device.hostname || '—', true],
                 ['Connection', 'Wi-Fi 5GHz (wlan0)', false],
-                ['Data Downloaded', formatBytes(device.rx || 0), true],
-                ['Data Uploaded', formatBytes(device.tx || 0), true],
+                ['Downloaded', formatBytes(device.rx || 0), true],
+                ['Uploaded',   formatBytes(device.tx || 0), true],
                 ['Total Usage', formatBytes((device.rx || 0) + (device.tx || 0)), true],
               ].map(([k, v, isMono], idx) => (
                 <div
                   key={k}
+                  className="kv-row"
                   style={{
-                    display: 'flex', justifyContent: 'space-between',
-                    padding: '6px 10px',
                     fontSize: 12,
                     backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
                     borderBottom: idx === 6 ? 'none' : '1px solid var(--color-border-subtle)'
                   }}
                 >
-                  <span style={{ color: 'var(--color-text-secondary)' }}>{k}</span>
-                  <span className={isMono ? 'mono' : ''} style={{ fontWeight: 500 }}>{v}</span>
+                  <span style={{ color: 'var(--color-text-secondary)', flexShrink: 0 }}>{k}</span>
+                  <span className={isMono ? 'mono text-truncate' : 'text-truncate'} style={{ fontWeight: 500, maxWidth: '60%', textAlign: 'right' }}>{v}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Device Actions */}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', paddingTop: 4 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', paddingTop: 4, flexWrap: 'wrap' }}>
             <button
               className={`btn ${isBlocked ? 'btn-primary' : 'btn-secondary'} btn-sm`}
               onClick={() => onToggleBlock(device.mac)}
             >
               {isBlocked ? (
-                <>
-                  <Play size={13} />
-                  Resume Internet Access
-                </>
+                <><Play size={13} /> Resume Internet</>
               ) : (
-                <>
-                  <Pause size={13} />
-                  Pause Internet Access
-                </>
+                <><Pause size={13} /> Pause Internet</>
               )}
             </button>
 
@@ -127,8 +120,7 @@ export default function DeviceDetailModal({ device, onClose, onUpdateDevice, onT
               className="btn btn-ghost btn-sm"
               style={{ color: 'var(--color-primary)' }}
             >
-              Set QoS Bandwidth Limit
-              <ArrowRight size={12} />
+              QoS Limits <ArrowRight size={12} />
             </Link>
           </div>
         </div>

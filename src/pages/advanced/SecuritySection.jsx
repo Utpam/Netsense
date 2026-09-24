@@ -122,7 +122,7 @@ export default function SecuritySection() {
             </div>
             <form onSubmit={handleAddRule}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="form-grid-2">
                   <div className="form-group">
                     <label className="form-label">Chain / Direction</label>
                     <select
@@ -173,7 +173,7 @@ export default function SecuritySection() {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="form-grid-2">
                   <div className="form-group">
                     <label className="form-label">Target Port</label>
                     <input

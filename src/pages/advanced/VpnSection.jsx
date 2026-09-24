@@ -59,7 +59,7 @@ export default function VpnSection() {
         subtitle="Kernel-level encrypted point-to-point network tunnel"
         badge={<StatusBadge status={isUp ? 'active' : 'disabled'} />}
         actions={
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="btn-row">
             <button
               className={`btn ${isUp ? 'btn-secondary' : 'btn-primary'} btn-sm`}
               onClick={isUp ? stop : start}

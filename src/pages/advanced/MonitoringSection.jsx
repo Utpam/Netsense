@@ -110,20 +110,23 @@ export default function MonitoringSection() {
           padding: 12,
           maxHeight: 280,
           overflowY: 'auto',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
           fontFamily: 'var(--font-family-mono)',
           fontSize: 11
         }}>
           {systemLogs.map((entry, idx) => (
-            <div key={idx} style={{ display: 'flex', gap: 8, padding: '3px 0', borderBottom: '1px solid #EEEEEE' }}>
-              <span style={{ color: 'var(--color-text-muted)' }}>[{entry.time}]</span>
+            <div key={idx} style={{ display: 'flex', gap: 8, padding: '3px 0', borderBottom: '1px solid #EEEEEE', minWidth: 420 }}>
+              <span style={{ color: 'var(--color-text-muted)', flexShrink: 0 }}>[{entry.time}]</span>
               <span style={{
                 color: entry.level === 'WARN' ? 'var(--color-warning)' : entry.level === 'ERROR' ? 'var(--color-danger)' : 'var(--color-primary)',
                 fontWeight: 600,
-                width: 44
+                width: 44,
+                flexShrink: 0
               }}>
                 {entry.level}
               </span>
-              <span style={{ color: 'var(--color-text-secondary)', width: 70 }}>{entry.source}:</span>
+              <span style={{ color: 'var(--color-text-secondary)', width: 70, flexShrink: 0 }}>{entry.source}:</span>
               <span style={{ color: 'var(--color-text)', flex: 1 }}>{entry.msg}</span>
             </div>
           ))}

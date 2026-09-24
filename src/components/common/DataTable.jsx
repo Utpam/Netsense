@@ -44,11 +44,11 @@ export default function DataTable({
     <div className="table-container">
       {searchable && (
         <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--color-border)', backgroundColor: '#FAFAFA' }}>
-          <div style={{ position: 'relative', maxWidth: 260 }}>
-            <Search size={13} style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
+          <div style={{ position: 'relative', maxWidth: 280 }}>
+            <Search size={13} style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', zIndex: 1 }} />
             <input
               className="form-input"
-              style={{ width: '100%', paddingLeft: 28, fontSize: 11 }}
+              style={{ width: '100%', paddingLeft: 28, fontSize: 12, minHeight: 34 }}
               placeholder="Search / filter entries…"
               value={query}
               onChange={e => setQuery(e.target.value)}
@@ -56,7 +56,7 @@ export default function DataTable({
           </div>
         </div>
       )}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
         <table className="router-table">
           <thead>
             <tr>

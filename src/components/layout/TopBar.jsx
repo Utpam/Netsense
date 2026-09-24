@@ -1,4 +1,4 @@
-import { Menu, ShieldCheck, Activity, Wifi, Radio } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import useSignalStore from '../../store/useSignalStore.js'
 import useSystemStore from '../../store/useSystemStore.js'
 import useTrafficStore from '../../store/useTrafficStore.js'
@@ -13,48 +13,41 @@ export default function TopBar({ onOpenMobile }) {
 
   return (
     <header className="app-header">
-      {/* Mobile toggle button */}
+      {/* Hamburger — visible only on mobile, opens drawer */}
       <button
-        className="btn btn-ghost btn-sm md:hidden"
-        style={{ padding: '4px 6px', marginRight: 8 }}
+        className="btn btn-ghost btn-sm mobile-menu-btn"
+        style={{ padding: '4px 6px', flexShrink: 0 }}
         onClick={onOpenMobile}
         aria-label="Open navigation menu"
       >
         <Menu size={18} />
       </button>
 
-      {/* Network summary ticker */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span className="live-dot" />
-          <span style={{ fontWeight: 600, color: 'var(--color-text)' }}>
-            {signal.operator || 'Cellular'} ({signal.technology || '4G LTE'})
-          </span>
-        </div>
-
-        <span style={{ color: 'var(--color-border)' }}>|</span>
-
-        <span style={{ color: 'var(--color-text-secondary)' }}>
-          Signal: <strong style={{ color: 'var(--color-text)', fontWeight: 600 }}>{sigQuality.label}</strong>
+      {/* Network summary — truncates on narrow screens */}
+      <div className="topbar-network-info">
+        <span className="live-dot" />
+        <span
+          className="text-truncate"
+          style={{ fontWeight: 600, color: 'var(--color-text)', fontSize: 12 }}
+        >
+          {signal.operator || 'Cellular'}&nbsp;({signal.technology || '4G LTE'})
+        </span>
+        <span className="topbar-hide-mobile" style={{ color: 'var(--color-border)' }}>|</span>
+        <span className="topbar-hide-mobile text-truncate" style={{ color: 'var(--color-text-secondary)', fontSize: 11 }}>
+          Signal:&nbsp;<strong style={{ color: 'var(--color-text)' }}>{sigQuality.label}</strong>
         </span>
       </div>
 
-      {/* Right side status indicators */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div className="hidden sm:flex" style={{ alignItems: 'center', gap: 12, fontSize: 11, color: 'var(--color-text-secondary)' }}>
-          <div>
-            ↓ <span className="mono" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{formatRate(traffic.rxRate)}</span>
-          </div>
-          <div>
-            ↑ <span className="mono" style={{ color: 'var(--color-text)', fontWeight: 600 }}>{formatRate(traffic.txRate)}</span>
-          </div>
+      {/* Right-side stats — hide verbose items on mobile */}
+      <div className="topbar-right-info">
+        <div className="topbar-hide-mobile" style={{ display: 'flex', gap: 10, fontSize: 11, color: 'var(--color-text-secondary)' }}>
+          <span>↓&nbsp;<strong className="mono" style={{ color: 'var(--color-primary)' }}>{formatRate(traffic.rxRate)}</strong></span>
+          <span>↑&nbsp;<strong className="mono">{formatRate(traffic.txRate)}</strong></span>
         </div>
-
-        <span className="hidden sm:inline" style={{ color: 'var(--color-border)' }}>|</span>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--color-text-secondary)' }}>
-          <span className="mono">{system.lanIp || '192.168.1.1'}</span>
-          <span>(CPU <strong className="mono" style={{ color: 'var(--color-text)' }}>{system.cpu}%</strong>)</span>
+        <span className="topbar-hide-mobile" style={{ color: 'var(--color-border)', fontSize: 11 }}>|</span>
+        <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', display: 'flex', gap: 5, alignItems: 'center' }}>
+          <span className="mono text-truncate" style={{ maxWidth: '100px' }}>{system.lanIp || '192.168.1.1'}</span>
+          <span className="topbar-hide-mobile">CPU&nbsp;<strong className="mono" style={{ color: 'var(--color-text)' }}>{system.cpu}%</strong></span>
         </div>
       </div>
     </header>
