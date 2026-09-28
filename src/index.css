@@ -889,3 +889,34 @@ textarea.form-input {
   word-break: break-word;
   overflow-wrap: break-word;
 }
+
+/* ── Responsive Hotspot Device Views ───────────────────────── */
+.device-desktop-table {
+  display: block;
+}
+
+.device-mobile-cards {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .device-desktop-table {
+    display: none;
+  }
+  .device-mobile-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+}
+
+/* ── Spin Animation for Refresh Button ──────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-animation {
+  animation: spin 0.8s linear infinite;
+}

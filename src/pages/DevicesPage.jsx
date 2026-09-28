@@ -1,139 +1,125 @@
 import { useState } from 'react'
-import { Laptop, Pause, Play, ArrowRight } from 'lucide-react'
-import PageHeader from '../components/common/PageHeader.jsx'
-import DataTable from '../components/common/DataTable.jsx'
-import StatusBadge from '../components/common/StatusBadge.jsx'
-import DeviceDetailModal from '../components/common/DeviceDetailModal.jsx'
-import useDeviceStore from '../store/useDeviceStore.js'
-import { formatBytes } from '../lib/utils.js'
+import { ArrowRight, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import PageHeader from '../components/common/PageHeader.jsx'
+import DeviceDetailModal from '../components/common/DeviceDetailModal.jsx'
+import HotspotStatus from '../components/hotspot/HotspotStatus.jsx'
+import ConnectedDeviceCount from '../components/hotspot/ConnectedDeviceCount.jsx'
+import ConnectedDevices from '../components/hotspot/ConnectedDevices.jsx'
+import RefreshButton from '../components/hotspot/RefreshButton.jsx'
+import useHotspot from '../hooks/useHotspot.js'
+
+function formatLastUpdated(date) {
+  if (!date) return null
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
 
 export default function DevicesPage() {
-  const devices      = useDeviceStore(s => s.devices)
-  const toggleBlock  = useDeviceStore(s => s.toggleBlock)
-  const updateDevice = useDeviceStore(s => s.updateDevice)
+  const {
+    status,
+    devices,
+    loading,
+    isRefreshing,
+    statusError,
+    devicesError,
+    lastUpdated,
+    refresh,
+    toggleBlockDevice,
+    updateDeviceName,
+  } = useHotspot({ interval: 10000, autoPoll: true })
 
   const [selectedDevice, setSelectedDevice] = useState(null)
 
-  const columns = [
-    {
-      key: 'name',
-      label: 'Device',
-      sortable: true,
-      render: (val, row) => (
-        <button
-          className="btn btn-ghost"
-          style={{ padding: 0, textAlign: 'left', color: 'var(--color-primary)', fontWeight: 600, minHeight: 'auto' }}
-          onClick={() => setSelectedDevice(row)}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-            <Laptop size={14} color="var(--color-text-secondary)" style={{ flexShrink: 0 }} />
-            <div>
-              <div className="text-truncate" style={{ maxWidth: 140 }}>{val}</div>
-              <div style={{ fontSize: 10, color: 'var(--color-text-muted)', fontWeight: 400 }}>{row.vendor || 'Unknown'}</div>
-            </div>
-          </div>
-        </button>
-      )
-    },
-    {
-      key: 'connection',
-      label: 'Connection',
-      sortable: false,
-      render: (_, row) => (
-        <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
-          {row.vendor === 'Synology' ? 'Ethernet' : 'Wi-Fi'}
-        </span>
-      )
-    },
-    {
-      key: 'online',
-      label: 'Status',
-      sortable: true,
-      render: (online, row) =>
-        row.blocked
-          ? <StatusBadge status="blocked" label="Paused" />
-          : <StatusBadge status={online ? 'connected' : 'offline'} />
-    },
-    {
-      key: 'ip',
-      label: 'IP',
-      mono: true,
-      sortable: true
-    },
-    {
-      key: 'usage',
-      label: 'Usage',
-      sortable: false,
-      render: (_, row) => (
-        <span className="mono" style={{ fontSize: 11 }}>
-          {formatBytes((row.rx || 0) + (row.tx || 0))}
-        </span>
-      )
-    },
-    {
-      key: '_actions',
-      label: '',
-      sortable: false,
-      render: (_, row) => (
-        <div style={{ display: 'flex', gap: 5 }}>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => setSelectedDevice(row)}
-          >
-            Details
-          </button>
-          <button
-            className={`btn ${row.blocked ? 'btn-primary' : 'btn-ghost'} btn-sm`}
-            onClick={() => toggleBlock(row.mac)}
-            title={row.blocked ? 'Resume internet access' : 'Pause internet access'}
-          >
-            {row.blocked ? <Play size={11} /> : <Pause size={11} />}
-            {row.blocked ? 'Resume' : 'Pause'}
-          </button>
-        </div>
-      )
-    }
-  ]
-
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      {/* ── Page Header with Manual Refresh & Last Updated ───────── */}
       <PageHeader
         title="Connected Devices"
-        subtitle="Manage devices on the local network"
+        subtitle="Wi-Fi hotspot status and connected client device management"
         actions={
-          <div className="btn-row">
-            <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>
-              {devices.length} total · {devices.filter(d => d.online).length} online
-            </span>
-            <Link to="/advanced/qos" className="btn btn-ghost btn-sm" style={{ color: 'var(--color-primary)' }}>
+          <div className="btn-row" style={{ alignItems: 'center' }}>
+            {lastUpdated && (
+              <span
+                style={{
+                  fontSize: 11,
+                  color: 'var(--color-text-secondary)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                }}
+              >
+                <Clock size={12} style={{ color: 'var(--color-text-muted)' }} />
+                Last updated: <strong>{formatLastUpdated(lastUpdated)}</strong>
+              </span>
+            )}
+
+            <RefreshButton
+              onRefresh={refresh}
+              isRefreshing={isRefreshing}
+              disabled={loading}
+            />
+
+            <Link
+              to="/advanced/qos"
+              className="btn btn-ghost btn-sm"
+              style={{ color: 'var(--color-primary)', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+            >
               QoS Limits <ArrowRight size={11} />
             </Link>
           </div>
         }
       />
 
-      <div className="card">
-        <DataTable
-          columns={columns}
-          rows={devices}
-          searchable
-          searchKeys={['name', 'ip', 'mac', 'vendor', 'hostname']}
-          emptyText="No connected devices found."
-          rowKey="mac"
+      {/* ── Hotspot Summary Section ──────────────────────────────── */}
+      <div
+        className="grid-2col"
+        style={{ marginBottom: 16 }}
+      >
+        {/* Card 1: Hotspot Active / Inactive Status */}
+        <HotspotStatus
+          status={status}
+          loading={loading}
+          error={statusError}
+          onRetry={refresh}
+        />
+
+        {/* Card 2: Connected Devices Count from /api/hotspot/status */}
+        <ConnectedDeviceCount
+          count={status?.connectedDeviceCount}
+          loading={loading}
+          error={statusError}
+          onRetry={refresh}
         />
       </div>
 
+      {/* ── Connected Device List Section ────────────────────────── */}
+      <ConnectedDevices
+        devices={devices}
+        loading={loading}
+        error={devicesError}
+        onRetry={refresh}
+        onSelectDevice={device => setSelectedDevice(device)}
+        onToggleBlock={toggleBlockDevice}
+      />
+
+      {/* ── Device Detail Modal ──────────────────────────────────── */}
       {selectedDevice && (
         <DeviceDetailModal
-          device={selectedDevice}
+          device={{
+            ...selectedDevice,
+            name: selectedDevice.deviceName || selectedDevice.name || 'Unknown device',
+            ip: selectedDevice.ipAddress || selectedDevice.ip || 'Unknown IP',
+            mac: selectedDevice.macAddress || selectedDevice.mac || '—',
+          }}
           onClose={() => setSelectedDevice(null)}
           onUpdateDevice={(mac, patch) => {
-            updateDevice(mac, patch)
+            if (patch.name) {
+              updateDeviceName(mac, patch.name)
+            }
             setSelectedDevice(prev => ({ ...prev, ...patch }))
           }}
           onToggleBlock={(mac) => {
-            toggleBlock(mac)
+            toggleBlockDevice(mac)
             setSelectedDevice(prev => ({ ...prev, blocked: !prev.blocked }))
           }}
         />
