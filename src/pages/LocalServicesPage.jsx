@@ -51,20 +51,20 @@ export default function LocalServicesPage() {
         queriesHandled: (dnsStatus.queriesTotal || 18453).toLocaleString()
       }
     },
-    {
-      id: 'farm',
-      name: 'Offline Farm Hub',
-      description: 'Local sensor data logging and agricultural monitoring agent for edge deployment',
-      status: 'running',
-      icon: Sprout,
-      port: 'HTTP (8888)',
-      advancedPath: '/advanced/monitoring',
-      details: {
-        summary: 'Collecting soil moisture, temperature, and ambient humidity from 4 field nodes.',
-        storageLocation: '/srv/farm/telemetry.sqlite',
-        lastSync: 'Syncing to local SQLite engine'
-      }
-    },
+    // {
+    //   id: 'farm',
+    //   name: 'Offline Farm Hub',
+    //   description: 'Local sensor data logging and agricultural monitoring agent for edge deployment',
+    //   status: 'running',
+    //   icon: Sprout,
+    //   port: 'HTTP (8888)',
+    //   advancedPath: '/advanced/monitoring',
+    //   details: {
+    //     summary: 'Collecting soil moisture, temperature, and ambient humidity from 4 field nodes.',
+    //     storageLocation: '/srv/farm/telemetry.sqlite',
+    //     lastSync: 'Syncing to local SQLite engine'
+    //   }
+    // },
     {
       id: 'vpn',
       name: 'WireGuard VPN Tunnel',
